@@ -46,7 +46,11 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/projeto-backend:latest
 
     - name: Subir ambiente (Validar Docker Compose)
-      run: docker-compose up -d
+      run: docker compose up -d
 
     - name: Verificar Containers Rodando
       run: docker ps -a
+
+    - name: Parar Containers
+      if: always()
+      run: docker compose down
