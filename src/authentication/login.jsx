@@ -102,7 +102,7 @@ function LoginPage() {
       if (response.ok) {
         console.log("Login realizado com sucesso:", data);
         
-        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user_token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user)); 
         
         navigate('/');

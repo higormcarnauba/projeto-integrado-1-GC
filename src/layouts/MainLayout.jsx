@@ -120,7 +120,7 @@ export default function MainLayout() {
     const handleDrawerClose = () => setOpen(false);
     
     const handleLogout = () => {
-        localStorage.removeItem('token'); 
+        localStorage.removeItem('user_token'); 
         localStorage.removeItem('userData');
         localStorage.removeItem('user_data'); 
         console.log("Usuário deslogado");

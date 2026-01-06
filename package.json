@@ -1,51 +1,27 @@
 {
   "name": "projeto-integrado-1",
-  "productName": "projeto-integrado-1",
+  "private": true,
   "version": "1.0.0",
-  "description": "My Electron application description",
-  "main": ".vite/build/main.js",
+  "type": "module",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
-  },
-  "keywords": [],
-  "author": {
-    "name": "Pablo Vinas",
-    "email": "pablo.araujo@alu.ufc.br"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "@electron-forge/cli": "^7.4.0",
-    "@electron-forge/maker-deb": "^7.4.0",
-    "@electron-forge/maker-rpm": "^7.4.0",
-    "@electron-forge/maker-squirrel": "^7.4.0",
-    "@electron-forge/maker-zip": "^7.4.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
-    "@electron-forge/plugin-fuses": "^7.4.0",
-    "@electron-forge/plugin-vite": "^7.4.0",
-    "@electron/fuses": "^1.8.0",
-    "electron": "31.0.2",
-    "vite": "^5.3.1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@date-io/date-fns": "^3.2.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
-    "@mui/x-date-pickers": "^8.14.1",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@mui/x-date-pickers": "^8.23.0",
     "axios": "^1.13.2",
-    "bcrypt": "^6.0.0",
     "date-fns": "^4.1.0",
-    "electron-squirrel-startup": "^1.0.1",
-    "nodemailer": "^7.0.10",
-    "pdf-lib": "^1.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.1"
   }
 }
