@@ -24,12 +24,23 @@ jobs:
         cd backend
         npm install
 
-    # Testes do proprio npm, podemos criar um script "test:ci" no package.json com mais testes
     - name: Rodar Testes Unitários
       run: |
         cd backend
         # npm test # Descomente se tiver testes reais
         echo "Simulando testes passando..." 
+
+
+    - name: Gerar arquivo .env com os Segredos Reais
+      run: |
+        touch .env
+        echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
+        echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
+        echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
+        
+        echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+        echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+        echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
 
     - name: Login no Docker Hub
       uses: docker/login-action@v3
