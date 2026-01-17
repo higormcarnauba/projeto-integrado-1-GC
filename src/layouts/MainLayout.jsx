@@ -1,13 +1,12 @@
-// src/layouts/MainLayout.jsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import {
     Box, Drawer as MuiDrawer, AppBar as MuiAppBar, Toolbar, List, CssBaseline,
     Typography, Divider, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText,
-    Breadcrumbs, Link as MuiLink
+    Breadcrumbs, Link as MuiLink,
+    Button
 } from '@mui/material';
-import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
+import { Outlet, Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 // Ícones
 import MenuIcon from '@mui/icons-material/Menu';
@@ -20,11 +19,9 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import SettingsIcon from '@mui/icons-material/Settings';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-
-import logoImage from '../assets/logo/iconblue.png'; 
+import logoImage from '../assets/logo/icon.png';
 
 const drawerWidth = 240;
 
@@ -85,7 +82,6 @@ const menuItems = [
     { text: 'Planos', icon: <CreditCardIcon />, path: '/planos' },
     { text: 'Financeiro', icon: <MonetizationOnIcon />, path: '/financeiro' },
     { text: 'Patrimônio', icon: <BusinessCenterIcon />, path: '/patrimonio' },
-    { text: 'Relatórios', icon: <AssessmentIcon />, path: '/relatorios' },
     { text: 'Configurações', icon: <SettingsIcon />, path: '/configuracoes' },
 ];
 
@@ -94,7 +90,6 @@ const breadcrumbNameMap = {
     '/planos': 'Planos',
     '/financeiro': 'Financeiro',
     '/patrimonio': 'Patrimônio',
-    '/relatorios': 'Relatórios',
     '/configuracoes': 'Configurações',
 };
 
@@ -102,76 +97,92 @@ const breadcrumbNameMap = {
 export default function MainLayout() {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
+    const [userName, setUserName] = useState(''); 
     const location = useLocation();
     const pathnames = location.pathname.split('/').filter((x) => x);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        try {
+            const storedData = localStorage.getItem('userData');
+            if (storedData) {
+                const parsedUser = JSON.parse(storedData);
+                if (parsedUser && parsedUser.nome_funcionario) {
+                    setUserName(parsedUser.nome_funcionario.toUpperCase());
+                }
+            }
+        } catch (error) {
+            console.error("Erro ao carregar nome do usuário no layout:", error);
+        }
+    }, []);
 
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
-    const handleProfileMenuOpen = () => console.log('Ícone de usuário clicado!');
+    
+    const handleLogout = () => {
+        localStorage.removeItem('user_token'); 
+        localStorage.removeItem('userData');
+        localStorage.removeItem('user_data'); 
+        console.log("Usuário deslogado");
+        navigate('/login');
+    };
 
     return (
         <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f6f8' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open} elevation={1}>
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{ marginRight: 2, ...(open && { display: 'none' }) }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-
-                    <Box
-                        component="img"
-                        src={logoImage}
-                        alt="Logo da Empresa"
-                        sx={{ height: 40, marginLeft: 1 }}
-                    />
-                    
+                    <IconButton color="inherit" onClick={handleDrawerOpen} edge="start" sx={{ marginRight: 2, ...(open && { display: 'none' }) }}><MenuIcon /></IconButton>
+                    <Box component="img" src={logoImage} alt="Logo da Empresa" sx={{ height: 40, marginLeft: 1 }}/>
                     <Box sx={{ ml: 2 }}>
-                        <Breadcrumbs 
-                            separator={<NavigateNextIcon fontSize="small" />} 
-                            aria-label="breadcrumb"
-                        >
-                            <MuiLink component={RouterLink} underline="hover" color="inherit" to="/">
-                                Corpo em Forma Gestão
-                            </MuiLink>
+                        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
+                            <MuiLink component={RouterLink} underline="hover" color="inherit" to="/">Corpo em Forma Gestão</MuiLink>
                             {pathnames.map((value, index) => {
                                 const to = `/${pathnames.slice(0, index + 1).join('/')}`;
                                 const isLast = index === pathnames.length - 1;
-                                return isLast ? (
-                                    <Typography color="text.primary" key={to}>
-                                        {breadcrumbNameMap[to]}
-                                    </Typography>
-                                ) : (
-                                    <MuiLink component={RouterLink} underline="hover" color="inherit" to={to} key={to}>
-                                        {breadcrumbNameMap[to]}
-                                    </MuiLink>
-                                );
+                                return isLast ? (<Typography color="text.primary" key={to}>{breadcrumbNameMap[to]}</Typography>) : (<MuiLink component={RouterLink} underline="hover" color="inherit" to={to} key={to}>{breadcrumbNameMap[to]}</MuiLink>);
                             })}
                         </Breadcrumbs>
                     </Box>
 
                     <Box sx={{ flexGrow: 1 }} />
                     
-                    <IconButton
-                        size="large"
-                        edge="end"
-                        onClick={handleProfileMenuOpen}
-                        color="inherit"
-                    >
-                        <AccountCircle sx={{ fontSize: '2rem' }} />
-                    </IconButton>
+                    <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'baseline', 
+                        gap: 1 
+                    }}>
+                        <Typography 
+                            variant="body2"
+                            sx={{ 
+                                display: { xs: 'none', sm: 'block' },
+                                textTransform: 'uppercase',
+                                color: 'text.secondary',
+                                fontSize: 11,
+                            }}
+                        >
+                            {userName || 'USUÁRIO'} 
+                        </Typography>
+                        <Button
+                            variant="text"
+                            size="small"
+                            onClick={handleLogout}
+                            sx={{ 
+                                textTransform: 'none',
+                                //backgroundColor: '#ffee58',
+                                color: 'text.secondary',
+                                minWidth: 'auto',
+                            }}
+                        >
+                            Sair
+                        </Button>
+                    </Box>
+
                 </Toolbar>
             </AppBar>
+
             <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-                    </IconButton>
-                </DrawerHeader>
+                <DrawerHeader><IconButton onClick={handleDrawerClose}>{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton></DrawerHeader>
                 <Divider />
                 <List>
                     {menuItems.map((item) => (
@@ -180,9 +191,34 @@ export default function MainLayout() {
                                 component={RouterLink}
                                 to={item.path}
                                 selected={location.pathname === item.path}
-                                sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5 }}
+                                sx={{
+                                    minHeight: 48,
+                                    justifyContent: open ? 'initial' : 'center',
+                                    px: 2.5,
+                                    borderRadius: 7,
+                                    mx: 1,
+                                    width: 'auto',
+                                    color: theme.palette.text.primary,
+                                    '.MuiListItemIcon-root': { color: theme.palette.text.secondary },
+                                    '&:hover': {
+                                        backgroundColor: '#fff8dc', 
+                                    },
+                                    '&.Mui-selected': {
+                                        backgroundColor: '#fff176', 
+                                        '&:hover': {
+                                            backgroundColor: '#ffee58', 
+                                        },
+                                    },
+                                }}
                             >
-                                <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center' }}>
+                                <ListItemIcon
+                                    sx={{
+                                        minWidth: 0,
+                                        mr: open ? 3 : 'auto',
+                                        justifyContent: 'center',
+                                        color: 'inherit',
+                                    }}
+                                >
                                     {item.icon}
                                 </ListItemIcon>
                                 <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
@@ -192,10 +228,7 @@ export default function MainLayout() {
                 </List>
             </Drawer>
 
-            <Box 
-                component="main" 
-                sx={{ flexGrow: 1, p: 3, backgroundColor: '#FFF0F5' }}
-            >
+            <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#ffffff', display: 'flex', flexDirection: 'column' }}>
                 <DrawerHeader />
                 <Outlet />
             </Box>
