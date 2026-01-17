@@ -41,6 +41,18 @@ services:
       - db                 
     networks:
       - projeto-network    
+  front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: projeto_front
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+    networks:
+      - projeto-network
 
 volumes:
   postgres_data:

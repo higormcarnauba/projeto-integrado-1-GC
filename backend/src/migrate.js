@@ -18,7 +18,7 @@ async function runMigrations() {
     host: process.env.DB_HOST || "localhost",
     database: process.env.POSTGRES_DB || "projeto_db",
     password: process.env.POSTGRES_PASSWORD,
-    port: process.env.DB_PORT || 5432,
+    port: process.env.DB_PORT || 5433,
   });
 
   try {
