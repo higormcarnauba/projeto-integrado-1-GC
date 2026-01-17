@@ -27,8 +27,7 @@ jobs:
     - name: Rodar Testes Unitários
       run: |
         cd backend
-        # npm test # Descomente se tiver testes reais
-        echo "Simulando testes passando..." 
+        npm test 
 
 
     - name: Gerar arquivo .env com os Segredos Reais
