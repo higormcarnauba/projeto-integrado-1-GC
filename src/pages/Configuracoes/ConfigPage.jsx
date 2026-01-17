@@ -18,6 +18,8 @@ import EditarUsuarioDialog from "./ConfigComponents/EditarUsuarioDialog";
 import ExcluirUsuarioDialog from "./ConfigComponents/ExcluirUsuarioDialog";
 import VerificarCodigoDialog from "./ConfigComponents/VerificarCodigoDialog";
 
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 function InfoItem({ icon, title, value }) {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
@@ -72,7 +74,7 @@ export default function ConfigPage() {
     if (!token) return;
 
     try {
-      const response = await fetch("http://localhost:4000/api/funcionario", {
+      const response = await fetch(`${baseURL}/api/funcionario`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +128,7 @@ export default function ConfigPage() {
           if (id && token) {
             try {
               const response = await fetch(
-                `http://localhost:4000/api/funcionario/id/${id}`,
+                `${baseURL}/api/funcionario/id/${id}`,
                 {
                   headers: { Authorization: `Bearer ${token}` },
                 }
@@ -170,7 +172,7 @@ export default function ConfigPage() {
       const id = parsedUser.id_funcionario || parsedUser.id;
       if (!id) return;
 
-      const resp = await fetch(`http://localhost:4000/api/funcionario/id/${id}`, {
+      const resp = await fetch(`${baseURL}/api/funcionario/id/${id}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (resp.ok) {
@@ -215,7 +217,7 @@ export default function ConfigPage() {
       nivel_acesso: userData.role === "ADMINISTRADOR" ? "Administrador" : "Funcionário",
     };
     
-    const response = await fetch("http://localhost:4000/api/funcionario", {
+    const response = await fetch(`${baseURL}/api/funcionario`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -256,8 +258,9 @@ export default function ConfigPage() {
     };
 
     try {
+      // CORREÇÃO: Usa baseURL
       const response = await fetch(
-        `http://localhost:4000/api/funcionario/${selectedUser.cpf}`,
+        `${baseURL}/api/funcionario/${selectedUser.cpf}`,
         {
           method: "PUT",
           headers: {
@@ -290,8 +293,9 @@ export default function ConfigPage() {
       const requesterRole = (user.role || "").toUpperCase();
 
       if (selectedUser.id === user.id && requesterRole !== "ADMINISTRADOR" && requesterRole !== "SUPER_ADMIN") {
+        // CORREÇÃO: Usa baseURL
         const response = await fetch(
-          `http://localhost:4000/api/funcionario/${selectedUser.cpf}`,
+          `${baseURL}/api/funcionario/${selectedUser.cpf}`,
           {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
@@ -329,7 +333,8 @@ export default function ConfigPage() {
           reason
         };
 
-        const resp = await fetch('http://localhost:4000/api/funcionario/admin/delete', {
+        // CORREÇÃO: Usa baseURL
+        const resp = await fetch(`${baseURL}/api/funcionario/admin/delete`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
