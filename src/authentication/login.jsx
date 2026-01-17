@@ -55,12 +55,10 @@ const Logo = () => (
 function LoginPage() {
   const navigate = useNavigate();
   
-  // Estados unificados
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   
-  // Estados de erro visual (vindos da develop)
   const [error, setError] = useState(false); 
   const [errorMessage, setErrorMessage] = useState(''); 
   const [fieldErrors, setFieldErrors] = useState({}); 
@@ -89,7 +87,9 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/api/login', {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+      
+      const response = await fetch(`${baseURL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
