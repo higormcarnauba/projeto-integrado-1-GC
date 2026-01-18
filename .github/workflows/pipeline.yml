@@ -55,6 +55,14 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/projeto-backend:latest
 
+    - name: Build e Push da Imagem Frontend
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/projeto-frontend:latest
+
     - name: Subir ambiente (Validar Docker Compose)
       run: docker compose up -d
 
