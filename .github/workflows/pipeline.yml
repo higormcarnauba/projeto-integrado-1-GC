@@ -7,9 +7,9 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  build-and-push:
+  verification:
+    name: Executar Testes Unitários
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout do código
       uses: actions/checkout@v4
@@ -29,6 +29,19 @@ jobs:
         cd backend
         npm test 
 
+  build-docker:
+    name: Build e Push das Imagens
+    needs: verification
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Login no Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Gerar arquivo .env com os Segredos Reais
       run: |
@@ -36,16 +49,9 @@ jobs:
         echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
         echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
         echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
-        
         echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
         echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
         echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
-
-    - name: Login no Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build e Push da Imagem Backend
       uses: docker/build-push-action@v5
@@ -73,8 +79,13 @@ jobs:
       if: always()
       run: docker compose down
 
+  deploy:
+    name: Realizar Deploy
+    needs: build-docker
+    runs-on: ubuntu-latest
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
     - name: Deploy Automático no Render
-      if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop') && success()
       run: |
         curl "${{ secrets.RENDER_DEPLOY_HOOK_FRONT }}"
         curl "${{ secrets.RENDER_DEPLOY_HOOK_BACK }}"
