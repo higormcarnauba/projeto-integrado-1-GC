@@ -64,3 +64,9 @@ jobs:
     - name: Parar Containers
       if: always()
       run: docker compose down
+
+    - name: Deploy Automático no Render
+      if: github.ref == 'refs/heads/main' && success()
+      run: |
+        curl "${{ secrets.RENDER_DEPLOY_HOOK_FRONT }}"
+        curl "${{ secrets.RENDER_DEPLOY_HOOK_BACK }}"
