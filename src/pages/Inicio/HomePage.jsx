@@ -6,29 +6,29 @@ import { useNavigate } from 'react-router-dom';
 import { getAlunos } from '../../services/alunosApiService';
 
 import CadastroAlunoDialog from '../Alunos/AlunosComponents/CadastroAlunoDialog';
-import ItemDialog from '../Patrimonio/PatrimonioComponents/ItemDialog'; 
+import ItemDialog from '../Patrimonio/PatrimonioComponents/ItemDialog';
 import AdminDashboard from './InicioComponents/AdminDashboard';
 
 const FuncionarioDashboard = () => {
-    const navigate = useNavigate();
-    const [isAlunoDialogOpen, setIsAlunoDialogOpen] = useState(false);
-    const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
-    
-    const [totalAlunosAtivos, setTotalAlunosAtivos] = useState(0);
+  const navigate = useNavigate();
+  const [isAlunoDialogOpen, setIsAlunoDialogOpen] = useState(false);
+  const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
 
-    useEffect(() => {
-        const fetchAlunos = async () => {
-            try {
-                const response = await getAlunos();
-                const alunos = response.data || [];
-                const ativos = alunos.filter(a => a.status_aluno === 'Ativo').length;
-                setTotalAlunosAtivos(ativos);
-            } catch (error) {
-                console.error("Erro ao buscar contagem de alunos:", error);
-            }
-        };
-        fetchAlunos();
-    }, []);
+  const [totalAlunosAtivos, setTotalAlunosAtivos] = useState(0);
+
+  useEffect(() => {
+    const fetchAlunos = async () => {
+      try {
+        const response = await getAlunos();
+        const alunos = response.data || [];
+        const ativos = alunos.filter(a => a.status_aluno === 'Ativo').length;
+        setTotalAlunosAtivos(ativos);
+      } catch (error) {
+        console.error("Erro ao buscar contagem de alunos:", error);
+      }
+    };
+    fetchAlunos();
+  }, []);
 
   const shortcutButtonStyle = {
     borderRadius: 50,
@@ -42,45 +42,45 @@ const FuncionarioDashboard = () => {
     textTransform: "uppercase",
   };
 
-    const handleSaveAluno = (novoAluno) => {
-        console.log("Novo aluno cadastrado (Funcionario):", novoAluno);
-        setIsAlunoDialogOpen(false);
-    };
-    const handleCloseAlunoDialog = () => {
-        setIsAlunoDialogOpen(false);
-    };
+  const handleSaveAluno = (novoAluno) => {
+    console.log("Novo aluno cadastrado (Funcionario):", novoAluno);
+    setIsAlunoDialogOpen(false);
+  };
+  const handleCloseAlunoDialog = () => {
+    setIsAlunoDialogOpen(false);
+  };
 
-    const handleSaveItem = (novoItem) => {
-        console.log("Novo item patrimônio cadastrado:", novoItem);
-        setIsItemDialogOpen(false);
-    };
-    const handleCloseItemDialog = () => {
-        setIsItemDialogOpen(false);
-    };
+  const handleSaveItem = (novoItem) => {
+    console.log("Novo item patrimônio cadastrado:", novoItem);
+    setIsItemDialogOpen(false);
+  };
+  const handleCloseItemDialog = () => {
+    setIsItemDialogOpen(false);
+  };
 
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
-        Visão Geral
+        VISÃO GERAL
       </Typography>
 
-            <Paper
-                variant="outlined"
-                sx={{
-                    padding: 3,
-                    borderRadius: 4,
-                    marginTop: 2
-                }}
-            >
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <Box sx={{ width: 12, height: 12, bgcolor: 'success.main', borderRadius: '50%' }} />
-                        <Typography variant="h6" color="text.secondary">Alunos Ativos</Typography>
-                    </Box>
-                    {/* Exibe o valor real do banco */}
-                    <Typography variant="h2" fontWeight="bold">{totalAlunosAtivos}</Typography>
-                </Box>
-            </Paper>
+      <Paper
+        variant="outlined"
+        sx={{
+          padding: 3,
+          borderRadius: 4,
+          marginTop: 2
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box sx={{ width: 12, height: 12, bgcolor: 'success.main', borderRadius: '50%' }} />
+            <Typography variant="h6" color="text.secondary">ALUNOS ATIVOS</Typography>
+          </Box>
+          {/* Exibe o valor real do banco */}
+          <Typography variant="h2" fontWeight="bold">{totalAlunosAtivos}</Typography>
+        </Box>
+      </Paper>
 
       <Typography variant="h5" fontWeight="normal" gutterBottom sx={{ mt: 4 }}>
         Atalhos rápidos
