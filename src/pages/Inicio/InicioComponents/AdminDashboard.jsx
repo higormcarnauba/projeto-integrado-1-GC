@@ -10,12 +10,12 @@ import CadastroAlunoDialog from "../../Alunos/AlunosComponents/CadastroAlunoDial
 import ItemDialog from '../../Financeiro/FinanceiroComponents/ItemDialog';
 
 const formatDateForAPI = (dateStr) => {
-    const [day, month, year] = dateStr.split('/').map(Number);
-    const dateObj = new Date(year, month - 1, day);
-    const y = dateObj.getFullYear();
-    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const d = String(dateObj.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
+  const [day, month, year] = dateStr.split('/').map(Number);
+  const dateObj = new Date(year, month - 1, day);
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const d = String(dateObj.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 };
 
 const StatCard = ({ title, value, color }) => (
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
   const [isAlunoDialogOpen, setIsAlunoDialogOpen] = useState(false);
   const [isReceitaDialogOpen, setIsReceitaDialogOpen] = useState(false);
   const [isDespesaDialogOpen, setIsDespesaDialogOpen] = useState(false);
-  
+
   const [listaPlanos, setListaPlanos] = useState([]);
   const [totalAlunosAtivos, setTotalAlunosAtivos] = useState(0);
   const [resumoFinanceiro, setResumoFinanceiro] = useState({
@@ -72,13 +72,13 @@ export default function AdminDashboard() {
 
       const finRes = await financeiroApi.getLancamentos();
       const lancamentos = finRes.data || [];
-      
+
       const hoje = new Date();
       const mesAtual = hoje.getMonth();
       const anoAtual = hoje.getFullYear();
 
       const doMes = lancamentos.filter(l => {
-        const dataL = new Date(l.data); 
+        const dataL = new Date(l.data);
         return dataL.getMonth() === mesAtual && dataL.getFullYear() === anoAtual;
       });
 
@@ -132,7 +132,7 @@ export default function AdminDashboard() {
       await alunosApi.createAluno(payload);
       alert("Aluno cadastrado com sucesso!");
       setIsAlunoDialogOpen(false);
-      fetchDashboardData(); 
+      fetchDashboardData();
     } catch (err) {
       console.error(err);
       alert("Erro ao cadastrar aluno.");
@@ -142,9 +142,9 @@ export default function AdminDashboard() {
   const handleSaveLancamento = async (data, isRecipe) => {
     try {
       const apiDate = formatDateForAPI(data.data);
-      
-      const nomeFinal = (isRecipe && data.categoria === 'Alunos' && data.nome_aluno) 
-        ? data.nome_aluno 
+
+      const nomeFinal = (isRecipe && data.categoria === 'Alunos' && data.nome_aluno)
+        ? data.nome_aluno
         : data.nome;
 
       const payload = {
@@ -158,11 +158,11 @@ export default function AdminDashboard() {
 
       await financeiroApi.createLancamento(payload);
       alert(`${isRecipe ? "Receita" : "Despesa"} registrada com sucesso!`);
-      
+
       if (isRecipe) setIsReceitaDialogOpen(false);
       else setIsDespesaDialogOpen(false);
 
-      fetchDashboardData(); 
+      fetchDashboardData();
     } catch (error) {
       console.error(error);
       alert("Erro ao salvar lançamento.");
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
-        Visão Geral
+        VISÃO GERAL
       </Typography>
 
       <Paper
@@ -200,10 +200,10 @@ export default function AdminDashboard() {
               }}
             />
             <Typography variant="h6" color="text.secondary">
-              Alunos Ativos
+              ALUNOS ATIVOS
             </Typography>
           </Box>
-          <Typography variant="h2" fontWeight="bold">{totalAlunosAtivos}</Typography> 
+          <Typography variant="h2" fontWeight="bold">{totalAlunosAtivos}</Typography>
         </Box>
       </Paper>
 
@@ -266,7 +266,7 @@ export default function AdminDashboard() {
         onSave={handleSaveAluno}
         listaPlanos={listaPlanos}
       />
-      
+
       <ItemDialog
         open={isReceitaDialogOpen}
         onClose={() => setIsReceitaDialogOpen(false)}
@@ -274,7 +274,7 @@ export default function AdminDashboard() {
         isRecipe={true}
         title="Registrar Receita"
       />
-      
+
       <ItemDialog
         open={isDespesaDialogOpen}
         onClose={() => setIsDespesaDialogOpen(false)}
